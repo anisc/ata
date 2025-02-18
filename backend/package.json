@@ -9,7 +9,7 @@
     "postinstall": "npm rebuild" 
   },
   "engines": { 
-    "node": ">=18"  
+    "node": "22.14.0"  
   },
   "keywords": [],
   "author": "",
