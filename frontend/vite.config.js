@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/ata/',
   server: {
     port: 5174, // Make sure this matches the port you're using
     open: true, // Automatically open the browser
