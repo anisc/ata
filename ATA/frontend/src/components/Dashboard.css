@@ -1,0 +1,207 @@
+/* frontend/src/components/Dashboard.css */
+
+/* --- Overall Dashboard Layout --- */
+.dashboard {
+  padding: 2rem 0;
+}
+
+/* Two-Column Layout */
+.dashboard-layout {
+    display: flex;
+}
+
+/* Sidebar Styles */
+.dashboard-sidebar {
+  width: 200px;
+  margin-right: 2rem;
+  padding-right: 1rem;
+  border-right: 1px solid var(--secondary-color);
+}
+
+.dashboard-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dashboard-nav li {
+  padding: 0.5rem 0;
+  cursor: pointer;
+  transition: background-color var(--transition-duration) ease, color var(--transition-duration) ease;
+  border-left: 3px solid transparent; /* Vertical bar for active state */
+  padding-left: 1rem; /* Add some padding */
+}
+
+.dashboard-nav li.active {
+  color: var(--primary-color);
+  border-left-color: var(--primary-color); /* Highlight active tab */
+  font-weight: bold;
+}
+
+.dashboard-nav li:hover {
+    color: var(--accent-color);
+}
+
+.dashboard-main {
+  flex: 1; /* Main content takes remaining space */
+}
+
+/* --- Card Styling --- */
+.card {
+  background-color: var(--secondary-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card h2, .card h3 {
+    margin-top: 0;
+}
+
+/* --- Member Statistics Styles --- */
+.member-stats h2 {
+  margin-bottom: 1rem;
+}
+
+.member-stats ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.member-stats li {
+  margin-bottom: 0.5rem;
+}
+
+/* --- Add Event Form Styles --- */
+.add-event {
+  margin-bottom: 2rem;
+}
+
+.add-event-form {
+  max-width: none; /* Allow form to take full width */
+  margin: 0;
+}
+
+.add-event-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.add-event-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.add-event-form input[type="text"],
+.add-event-form input[type="datetime-local"],
+.add-event-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: border-color var(--transition-duration) ease;
+}
+
+.add-event-form input[type="text"]:focus,
+.add-event-form input[type="datetime-local"]:focus,
+.add-event-form textarea:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+
+.add-event-form textarea {
+  resize: vertical;
+}
+
+/* --- Display Events Styles --- */
+.display-events {
+  margin-top: 1rem;
+}
+
+.events-list {
+  list-style: none;
+  padding: 0;
+}
+
+.event-item {
+  border: 1px solid var(--secondary-color);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  background-color: var(--secondary-color);
+}
+
+.event-item h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.delete-button {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.delete-button:hover {
+  background-color: darken(var(--accent-color), 10%);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+
+    .dashboard-sidebar {
+        width: 100%;
+        margin-right: 0;
+        padding-right: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+    .dashboard-nav ul {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+}
+
+/* --- Table Styles --- */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  padding: 0.75rem;
+  border: 1px solid var(--secondary-color);
+  text-align: left;
+}
+
+.dashboard-table th {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
+.dashboard-table tr:nth-child(even) {
+  background-color: var(--background-color);
+}

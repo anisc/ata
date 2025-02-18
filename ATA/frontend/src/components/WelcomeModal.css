@@ -1,0 +1,43 @@
+/* frontend/src/components/WelcomeModal.css */
+.welcome-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Darker, more opaque overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Higher z-index than other modals */
+  }
+  
+  .welcome-modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px; /* More rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+    max-width: 80%;
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: center; /* Center the content */
+  }
+  
+  .welcome-modal-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+  
+  .welcome-modal-content ul {
+      list-style: none;
+      padding: 0;
+  }
+  .welcome-modal-content ul li {
+      margin-bottom: 0.5rem;
+  }
+  
+  .welcome-modal-content button {
+    margin-top: 1rem;
+    margin-right: 1rem;
+  }
+  

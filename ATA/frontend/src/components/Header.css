@@ -1,0 +1,119 @@
+/* frontend/src/components/Header.css */
+.header {
+    background-color: transparent;
+    padding: 1.5rem 0;
+    transition: background-color var(--transition-duration) ease, box-shadow var(--transition-duration) ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+  }
+  
+  .header.sticky {
+    position: fixed;
+    background-color: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+  }
+  
+  .header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo a {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--secondary-color); /* White color when at top */
+    display: flex;
+    align-items: center;
+    transition: color var(--transition-duration) ease;
+  }
+  
+  .header.sticky .logo a {
+      color: var(--primary-color); /* Change color when sticky */
+  }
+  
+  .logo-image {
+    max-height: 50px;
+    margin-right: 0.5rem;
+  }
+  
+  .nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+  
+  .nav ul li {
+      margin-left: 1.5rem;
+  }
+  
+  /* Initial nav link color (when header is transparent) */
+  .nav ul li a {
+      color: var(--secondary-color); /* White color */
+      font-weight: 500;
+      transition: color var(--transition-duration) ease;
+      position: relative;
+      padding-bottom: 0.25rem;
+  }
+  
+  /* Nav link color when header is sticky */
+  .header.sticky .nav ul li a {
+      color: var(--text-color);
+  }
+  
+  .nav ul li a:hover {
+      color: var(--primary-color);
+  }
+  .header.sticky .nav ul li a:hover {
+      color: var(--accent-color);
+  }
+  
+  /* Underline effect on hover */
+  .nav ul li a::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary-color);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition-duration) ease;
+  }
+  
+  .nav ul li a:hover::after {
+      transform: scaleX(1);
+  }
+  
+  .header.sticky .nav ul li a::after {
+      background-color: var(--accent-color);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .header {
+      padding: 1rem 0;
+    }
+    .header.sticky {
+      padding: 0.5rem 0;
+    }
+    .logo a {
+      font-size: 1.25rem;
+    }
+    .nav ul li {
+      margin-left: 0.75rem;
+    }
+    .nav ul li a {
+        font-size: 0.9rem;
+    }
+    .logo-image {
+      max-height: 40px;
+    }
+  }
+  

@@ -1,0 +1,33 @@
+/* frontend/src/components/Events.css */
+.events {
+    /* Removed border-bottom */
+}
+
+.upcoming, .past, .categories {
+  padding: 2rem 0;
+}
+
+.upcoming h2, .past h2, .categories h2 {
+  margin-bottom: 1rem;
+}
+
+.categories ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.categories ul li {
+    background-color: var(--secondary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .categories ul {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,174 @@
+/* frontend/src/components/Home.css */
+.hero {
+  position: relative;
+  min-height: 60vh;
+  overflow: hidden;
+}
+
+/* Single overlay for the entire hero section */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+/* Each slide now contains both the image and the content */
+.hero-slide {
+  position: relative;
+  display: flex;          /* Make the slide a flex container */
+  align-items: center;    /* Center content vertically */
+  justify-content: center;  /* Center content horizontally */
+  min-height: 60vh;          /* Set the height of each slide */
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin-left: auto; /* Center horizontally */
+  margin-right: auto; /* Center horizontally */
+  padding: 2rem;
+  text-align: center; /* Center text horizontally */
+  color: var(--secondary-color);
+  display: flex;          /* Make the content a flex container */
+  flex-direction: column; /* Stack content vertically */
+  align-items: center;    /* Center content horizontally */
+  justify-content: center; /* Center content vertically (not strictly needed with column direction)*/
+  height: 100%;          /* Fill the slide height */
+  width: 100%;           /* Fill the slide width */
+}
+
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-subtitle {
+  font-size: 1.75rem;
+  font-weight: 400;
+  margin-bottom: 2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.hero-button {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color var(--transition-duration) ease, transform var(--transition-duration) ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hero-button:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ... rest of your Home.css ... */
+
+/* About Section Styles */
+.about {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 3rem; /* Space between columns */
+    align-items: center; /* Vertically align content */
+    margin-bottom: 2rem;
+}
+
+.about-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.about-content h2 {
+    margin-top: 0; /* Remove default top margin */
+}
+
+/* Other Section Styles */
+.mission, .services, .events, .culture, .newsletter {
+    padding: 3rem 0; /* Consistent vertical padding */
+    border-bottom: 1px solid var(--secondary-color); /* Subtle separator */
+}
+
+.mission h2, .services h2, .events h2, .culture h2, .newsletter h2 {
+    font-size: 2.25rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    text-align: center; /* Center-align headings */
+}
+
+.services ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+    justify-content: center; /* Center the list items */
+    gap: 1rem;
+}
+
+.services ul li {
+    margin-bottom: 0.5rem;
+    background-color: var(--secondary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-right: 0.5rem;
+}
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the form elements */
+}
+
+.newsletter input[type="email"] {
+    padding: 0.75rem;
+    margin-right: 0.5rem;
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: border-color var(--transition-duration) ease;
+    width: 100%; /* Full width on smaller screens */
+    max-width: 400px; /* Limit width on larger screens */
+    margin-bottom: 1rem;
+}
+
+.newsletter input[type="email"]:focus {
+    border-color: var(--accent-color);
+    outline: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .about {
+        grid-template-columns: 1fr;
+    }
+    .services ul {
+        flex-direction: column;
+    }
+}
