@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import { useAuth } from '../context/AuthContext';
 
+
+
 function Dashboard() {
     const [members, setMembers] = useState([]);
     const [events, setEvents] = useState([]);
@@ -84,7 +86,7 @@ function Dashboard() {
         setIsSuccess(false);
 
         try {
-            const response = await fetch('http://localhost:3001/api/events', {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/members`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
