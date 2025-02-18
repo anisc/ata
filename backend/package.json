@@ -4,9 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    
-    "postinstall": "npm rebuild" 
+    "start": "node server.js"
   },
   "engines": { 
     "node": "22.14.0"  
