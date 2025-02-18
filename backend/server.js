@@ -2,7 +2,7 @@
 const express = require('express');
 const { createClient } = require('@libsql/client');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 require('dotenv').config(); // Import dotenv
 
 const app = express();
