@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "preinstall": "npm install --platform=linux --arch=x64",
+    
     "postinstall": "npm rebuild" 
   },
   "engines": { 
