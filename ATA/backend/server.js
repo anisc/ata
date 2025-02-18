@@ -6,7 +6,8 @@ const bcrypt = require('bcrypt');
 require('dotenv').config(); // Import dotenv
 
 const app = express();
-const port = 3001;
+//const port = 3001;
+const port = process.env.PORT || 3001;
 
 const db = createClient({
   url: 'file:./my-database.db',
@@ -312,7 +313,7 @@ async function initializeApp() {
       }
 
       console.log('Starting server...');
-      app.listen(port, () => {
+      app.listen(port, '0.0.0.0', () => { // Listen on 0.0.0.0
         console.log(`Server listening on port ${port}`);
       });
 
