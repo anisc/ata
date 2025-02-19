@@ -5,5 +5,5 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/ata/', // MUST be correct, with leading and trailing slashes
+  // base: '/ata/', // MUST be correct, with leading and trailing slashes
 });
