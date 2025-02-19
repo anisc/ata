@@ -29,7 +29,7 @@ function Dashboard() {
 
         const fetchData = async () => {
             try {
-                const membersResponse = await fetch('http://localhost:3001/api/members');
+                const membersResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/members`);
                 if (!membersResponse.ok) {
                     throw new Error(`HTTP error! status: ${membersResponse.status}`);
                 }
@@ -55,7 +55,7 @@ function Dashboard() {
 
                 setMembers(formattedMembers);
 
-                const eventsResponse = await fetch('http://localhost:3001/api/events');
+                const eventsResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/members`);
                 if (!eventsResponse.ok) {
                     throw new Error(`HTTP error! status: ${eventsResponse.status}`);
                 }
@@ -102,7 +102,7 @@ function Dashboard() {
                 setNewEvent({ title: '', start: '', end: '', location: '', description: '' });
 
                 // Refetch events
-                fetch('http://localhost:3001/api/events')
+                fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`)
                     .then(response => response.json())
                     .then(data => {
                         const formattedEvents = data.map(event => ({
@@ -131,13 +131,13 @@ function Dashboard() {
         }
 
         try {
-            const response = await fetch(`http://localhost:3001/api/events/${eventId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events/${eventId}`, {
                 method: 'DELETE',
             });
 
             if (response.ok) {
                 // Refetch events after successful deletion
-                fetch('http://localhost:3001/api/events')
+                fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`)
                     .then(response => response.json())
                     .then(data => {
                         const formattedEvents = data.map(event => ({
