@@ -55,7 +55,7 @@ function Dashboard() {
 
                 setMembers(formattedMembers);
 
-                const eventsResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/members`);
+                const eventsResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`);
                 if (!eventsResponse.ok) {
                     throw new Error(`HTTP error! status: ${eventsResponse.status}`);
                 }
@@ -86,7 +86,7 @@ function Dashboard() {
         setIsSuccess(false);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/members`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
