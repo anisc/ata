@@ -34,7 +34,7 @@ function Header() {
       <div className="container">
         <div className="logo">
           <Link to="/">
-            <img src="/logo.png" alt="Tunisian Circle Logo" className="logo-image" />
+            <img src="/assets/logo.png" alt="Tunisian Circle Logo" className="logo-image" />
           </Link>
         </div>
         <nav className="nav">

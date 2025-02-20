@@ -28,7 +28,7 @@ function Events() {
 
   // Fetch events from the backend when the component mounts
   useEffect(() => {
-    fetch('http://localhost:3001/api/events')
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`)
       .then(response => response.json())
       .then(data => {
         // Convert start and end strings back to Date objects

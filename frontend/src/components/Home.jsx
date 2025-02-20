@@ -4,10 +4,10 @@ import './Home.css';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; //  ESSENTIAL
 import "slick-carousel/slick/slick-theme.css"; //  ESSENTIAL for default styling
-import heroImage1 from '../assets/hero-image1.jpg';
-import heroImage2 from '../assets/hero-image2.jpg';
-import heroImage3 from '../assets/hero-image3.jpg';
-import aboutImage from '../assets/about-image.jpg'
+// import heroImage1 from '../assets/hero-image1.jpg';
+// import heroImage2 from '../assets/hero-image2.jpg';
+// import heroImage3 from '../assets/hero-image3.jpg';
+// import aboutImage from '../assets/about-image.jpg';
 
 function Home() {
   const settings = {
@@ -29,7 +29,7 @@ function Home() {
         <Slider {...settings}>
           {/* Each slide contains BOTH the image and the content */}
           <div className="hero-slide">
-            <img src={heroImage1} alt="Tunisian Culture 1" className="hero-image" />
+            <img src="/assets/hero-image1.jpg" alt="Tunisian Culture 1" className="hero-image" />
             <div className="hero-content text-center">
               <h1 className="hero-title mb-1">Welcome to the Alberta Tunisian Association</h1>
               <p className="hero-subtitle mb-2">Connecting Tunisians and promoting our culture.</p>
@@ -37,7 +37,7 @@ function Home() {
             </div>
           </div>
           <div className="hero-slide">
-            <img src={heroImage2} alt="Tunisian Culture 2" className="hero-image" />
+            <img src="/assets/hero-image2.jpg" alt="Tunisian Culture 2" className="hero-image" />
             <div className="hero-content text-center">
               <h1 className="hero-title mb-1">Welcome to the Alberta Tunisian Association</h1>
               <p className="hero-subtitle mb-2">Connecting Tunisians and promoting our culture.</p>
@@ -45,7 +45,7 @@ function Home() {
             </div>
           </div>
           <div className="hero-slide">
-            <img src={heroImage3} alt="Tunisian Culture 3" className="hero-image" />
+            <img src="/assets/hero-image3.jpg" alt="Tunisian Culture 3" className="hero-image" />
             <div className="hero-content text-center">
               <h1 className="hero-title mb-1">Welcome to the Alberta Tunisian Association</h1>
               <p className="hero-subtitle mb-2">Connecting Tunisians and promoting our culture.</p>
@@ -63,7 +63,7 @@ function Home() {
           </p>
         </div>
         <div className="about-image">
-          <img src={aboutImage} alt="About Us" />
+          <img src="/assets/about-image.jpg" alt="About Us" />
         </div>
       </section>
 
