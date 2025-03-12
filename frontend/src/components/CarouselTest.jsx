@@ -3,7 +3,7 @@ import React from 'react';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import heroImage1 from '../assets/hero-image1.jpg';
+// import heroImage1 from '../assets/hero-image1.jpg';
 
 function CarouselTest() {
   const settings = {
@@ -19,7 +19,7 @@ function CarouselTest() {
       <h2>Simple Slider</h2>
       <Slider {...settings}>
         <div>
-        <img src={heroImage1} alt="Tunisian Culture 1" className="hero-image" />
+        <img src="/assets/about-image.jpg" alt="Tunisian Culture 1" className="hero-image" />
         </div>
         <div>
           <h3>Slide 2</h3>

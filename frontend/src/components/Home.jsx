@@ -4,10 +4,10 @@ import './Home.css';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; //  ESSENTIAL
 import "slick-carousel/slick/slick-theme.css"; //  ESSENTIAL for default styling
-import heroImage1 from '../assets/hero-image1.jpg';
-import heroImage2 from '../assets/hero-image2.jpg';
-import heroImage3 from '../assets/hero-image3.jpg';
-import aboutImage from '../assets/about-image.jpg'
+// import heroImage1 from '../assets/hero-image1.jpg';
+// import heroImage2 from '../assets/hero-image2.jpg';
+// import heroImage3 from '../assets/hero-image3.jpg';
+// import aboutImage from '../assets/about-image.jpg';
 
 function Home() {
   const settings = {
@@ -29,7 +29,7 @@ function Home() {
         <Slider {...settings}>
           {/* Each slide contains BOTH the image and the content */}
           <div className="hero-slide">
-            <img src={heroImage1} alt="Tunisian Culture 1" className="hero-image" />
+            <img src="/assets/hero-image1.jpg" alt="Tunisian Culture 1" className="hero-image" />
             <div className="hero-content text-center">
               <h1 className="hero-title mb-1">Welcome to the Alberta Tunisian Association</h1>
               <p className="hero-subtitle mb-2">Connecting Tunisians and promoting our culture.</p>
@@ -37,7 +37,7 @@ function Home() {
             </div>
           </div>
           <div className="hero-slide">
-            <img src={heroImage2} alt="Tunisian Culture 2" className="hero-image" />
+            <img src="/assets/hero-image2.jpg" alt="Tunisian Culture 2" className="hero-image" />
             <div className="hero-content text-center">
               <h1 className="hero-title mb-1">Welcome to the Alberta Tunisian Association</h1>
               <p className="hero-subtitle mb-2">Connecting Tunisians and promoting our culture.</p>
@@ -45,7 +45,7 @@ function Home() {
             </div>
           </div>
           <div className="hero-slide">
-            <img src={heroImage3} alt="Tunisian Culture 3" className="hero-image" />
+            <img src="/assets/hero-image3.jpg" alt="Tunisian Culture 3" className="hero-image" />
             <div className="hero-content text-center">
               <h1 className="hero-title mb-1">Welcome to the Alberta Tunisian Association</h1>
               <p className="hero-subtitle mb-2">Connecting Tunisians and promoting our culture.</p>
@@ -59,11 +59,17 @@ function Home() {
         <div className="about-content">
           <h2>About Us</h2>
           <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          The Alberta Tunisian Association (ATA) is a non-profit organization registered in Alberta. 
+          The ATA was created in 2011 in Calgary Alberta (Canada) by a group of Tunisians who shared one vision which is to form a stronger united community.
+          Its main goal is to bring together all Tunisians in Alberta by providing a social and a cultural umbrella for them and to connect every Tunisian living in Canada with the rest of the society and help them integrate and be successful.
+          Our core values are Compassion, Respect, Excellence, Integrity, and Co-operation. 
+          The ATA reaches out to Tunisians, cares about them and helps them integrate in the North American society. 
+          The ATA promotes respect and co-existence between all ethnicities.
+          As members of the ATA we strive to be the best in what we do and be a model to emulate for others by being honest, trustworthy and accountable. We always try to be effective and innovative. We will always encourage teamwork and partnerships with other organizations and community associations.
           </p>
         </div>
         <div className="about-image">
-          <img src={aboutImage} alt="About Us" />
+          <img src="/assets/about-image.jpg" alt="About Us" />
         </div>
       </section>
 

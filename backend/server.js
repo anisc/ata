@@ -45,23 +45,23 @@ app.post('/api/members', async (req, res) => {
   try {
       console.log("Received member request. Raw req.body:", req.body); // Log the raw request body
 
-      const { name, email, location, age, sex, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear } = req.body;
+      const { name, email, location, age, gender, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear } = req.body;
 
-      console.log("Extracted values:");
-      console.log("  name:", name, typeof name);
-      console.log("  email:", email, typeof email);
-      console.log("  location:", location, typeof location);
-      console.log("  age:", age, typeof age);
-      console.log("  sex:", sex, typeof sex);
-      console.log("  workStatus:", workStatus, typeof workStatus);
-      console.log("  tunisianCity:", tunisianCity, typeof tunisianCity);
-      console.log("  isFamily:", isFamily, typeof isFamily);
-      console.log("  familyMembers:", familyMembers, typeof familyMembers);
-      console.log("  occupation:", occupation, typeof occupation);
-      console.log("  settlingYear:", settlingYear, typeof settlingYear);
+      // console.log("Extracted values:");
+      // console.log("  name:", name, typeof name);
+      // console.log("  email:", email, typeof email);
+      // console.log("  location:", location, typeof location);
+      // console.log("  age:", age, typeof age);
+      // console.log("  gender:", gender, typeof gender);
+      // console.log("  workStatus:", workStatus, typeof workStatus);
+      // console.log("  tunisianCity:", tunisianCity, typeof tunisianCity);
+      // console.log("  isFamily:", isFamily, typeof isFamily);
+      // console.log("  familyMembers:", familyMembers, typeof familyMembers);
+      // console.log("  occupation:", occupation, typeof occupation);
+      // console.log("  settlingYear:", settlingYear, typeof settlingYear);
 
 
-      if (!name || !email || !location || !age || !sex || !workStatus || !tunisianCity || !settlingYear) {
+      if (!name || !email || !location || !age || !gender || !workStatus || !tunisianCity || !settlingYear) {
           console.log("Missing required fields. Returning 400.");
           return res.status(400).json({ message: 'Missing required fields' });
       }
@@ -78,9 +78,9 @@ app.post('/api/members', async (req, res) => {
 
 
       const result = await db.execute({
-          sql: `INSERT INTO members (name, email, location, age, sex, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear)
+          sql: `INSERT INTO members (name, email, location, age, gender, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          args: [name, email, location, age, sex, workStatus, tunisianCity, isFamily ? 1 : 0, familyMembersJSON, occupation, settlingYear],
+          args: [name, email, location, age, gender, workStatus, tunisianCity, isFamily ? 1 : 0, familyMembersJSON, occupation, settlingYear],
       });
 
       console.log("Database insert result:", result); // Log the result
@@ -263,7 +263,7 @@ async function initializeApp() {
             email TEXT NOT NULL,
             location TEXT NOT NULL,
             age INTEGER NOT NULL,
-            sex TEXT NOT NULL,
+            gender TEXT NOT NULL,
             workStatus TEXT NOT NULL,
             tunisianCity TEXT NOT NULL,
             isFamily INTEGER NOT NULL,

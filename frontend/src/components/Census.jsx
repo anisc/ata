@@ -8,7 +8,7 @@ function Census() {
     email: '',
     location: '',
     age: '',
-    sex: '',
+    gender: '',
     workStatus: '',
     tunisianCity: '',
     isFamily: false,
@@ -38,7 +38,7 @@ function Census() {
   const addFamilyMember = () => {
     setFormData({
       ...formData,
-      familyMembers: [...formData.familyMembers, { age: '', sex: '', name: '' }],
+      familyMembers: [...formData.familyMembers, { age: '', gender: '', name: '' }],
     });
   };
 
@@ -72,7 +72,7 @@ function Census() {
           email: '',
           location: '',
           age: '',
-          sex: '',
+          gender: '',
           workStatus: '',
           tunisianCity: '',
           isFamily: false,
@@ -130,8 +130,8 @@ function Census() {
               <input type="number" id="age" name="age" value={formData.age} onChange={handleChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="sex">Sex:</label>
-              <select id="sex" name="sex" value={formData.sex} onChange={handleChange} required>
+              <label htmlFor="gender">Gender:</label>
+              <select id="gender" name="gender" value={formData.gender} onChange={handleChange} required>
                 <option value="">Select...</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -183,12 +183,12 @@ function Census() {
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor={`memberSex${index}`}>Sex:</label>
+                      <label htmlFor={`memberGender${index}`}>Gender:</label>
                       <select
-                        id={`memberSex${index}`}
-                        name={`memberSex${index}`}
-                        value={member.sex}
-                        onChange={(e) => handleFamilyMemberChange(index, 'sex', e.target.value)}
+                        id={`memberGender${index}`}
+                        name={`memberGender${index}`}
+                        value={member.gender}
+                        onChange={(e) => handleFamilyMemberChange(index, 'gender', e.target.value)}
                       >
                         <option value="">Select...</option>
                         <option value="Male">Male</option>
