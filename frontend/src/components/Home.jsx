@@ -59,9 +59,13 @@ function Home() {
         <div className="about-content">
           <h2>About Us</h2>
           <p>
-          The Alberta Tunisian Association (ATA) is a non-profit organization registered in Alberta. The ATA was created in 2011 in Calgary Alberta (Canada) by a group of Tunisians who shared one vision which is to form a stronger united community.Its main goal is to bring together all Tunisians in Alberta by providing a social and a cultural umbrella for them and to connect every Tunisian living in Canada with the rest of the society and help them integrate and be successful.
-Our core values are Compassion, Respect, Excellence, Integrity, and Co-operation. The ATA reaches out to Tunisians, cares about them and helps them integrate in the North American society. The ATA promotes respect and co-existence between all ethnicities.
-As members of the ATA we strive to be the best in what we do and be a model to emulate for others by being honest, trustworthy and accountable. We always try to be effective and innovative. We will always encourage teamwork and partnerships with other organizations and community associations.
+          The Alberta Tunisian Association (ATA) is a non-profit organization registered in Alberta. 
+          The ATA was created in 2011 in Calgary Alberta (Canada) by a group of Tunisians who shared one vision which is to form a stronger united community.
+          Its main goal is to bring together all Tunisians in Alberta by providing a social and a cultural umbrella for them and to connect every Tunisian living in Canada with the rest of the society and help them integrate and be successful.
+          Our core values are Compassion, Respect, Excellence, Integrity, and Co-operation. 
+          The ATA reaches out to Tunisians, cares about them and helps them integrate in the North American society. 
+          The ATA promotes respect and co-existence between all ethnicities.
+          As members of the ATA we strive to be the best in what we do and be a model to emulate for others by being honest, trustworthy and accountable. We always try to be effective and innovative. We will always encourage teamwork and partnerships with other organizations and community associations.
           </p>
         </div>
         <div className="about-image">
