@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "VITE_API_BASE_URL=http://173.249.6.217 vite build",
     "preview": "vite preview"
   },
   "dependencies": {
