@@ -1,32 +1,44 @@
 // backend/server.js
 const express = require('express');
-const { createClient } = require('@libsql/client');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
-require('dotenv').config(); // Import dotenv
+const bcrypt = require('bcryptjs'); // Use bcryptjs
+require('dotenv').config();
+const { Pool } = require('pg'); // Import the Pool class from the 'pg' library
 
 const app = express();
-//const port = 3001;
 const port = process.env.PORT || 3001;
 
-const db = createClient({
-  url: 'file:./my-database.db',
+// PostgreSQL Connection Pool Configuration
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
-// IMPORTANT: Middleware order!
-app.use(express.json()); // Parse JSON request bodies (MUST come before cors and routes)
-app.use(cors());       // Enable CORS (MUST come before your routes)
+// Test the database connection (IMPORTANT)
+async function testDbConnection() {
+    try {
+        const client = await pool.connect(); // Get a client from the pool
+        console.log("Connected to PostgreSQL database successfully!");
+        client.release(); // Release the client back to the pool
+    } catch (error) {
+        console.error("Error connecting to PostgreSQL:", error);
+        process.exit(1); // Exit if cannot connect
+    }
+}
+testDbConnection(); // Call the test function
 
-// --- TEMPORARY: Hardcoded admin credentials (FOR DEVELOPMENT ONLY!) ---
-// const ADMIN_USERNAME = 'admin';
-// const ADMIN_PASSWORD = 'password'; //  CHANGE THIS IMMEDIATELY!
+app.use(express.json());
+app.use(cors());
 
 // --- API Endpoints ---
 
 // Get all members
 app.get('/api/members', async (req, res) => {
   try {
-    const { rows } = await db.execute('SELECT * FROM members');
+    const { rows } = await pool.query('SELECT * FROM members'); // Use pool.query
      // Convert familyMembers back to an object from JSON string
      const formattedRows = rows.map((row) => ({
         ...row,
@@ -40,89 +52,31 @@ app.get('/api/members', async (req, res) => {
 });
 
 // Add a new member
-// backend/server.js (inside the POST /api/members route)
 app.post('/api/members', async (req, res) => {
-  try {
-      console.log("Received member request. Raw req.body:", req.body); // Log the raw request body
+    try {
+        const { name, email, location, age, sex, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear } = req.body;
+        console.log("Received member request", req.body);
 
-      const { name, email, location, age, sex, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear } = req.body;
+        if (!name || !email || !location || !age || !sex || !workStatus || !tunisianCity || !settlingYear) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
 
-      console.log("Extracted values:");
-      console.log("  name:", name, typeof name);
-      console.log("  email:", email, typeof email);
-      console.log("  location:", location, typeof location);
-      console.log("  age:", age, typeof age);
-      console.log("  sex:", sex, typeof sex);
-      console.log("  workStatus:", workStatus, typeof workStatus);
-      console.log("  tunisianCity:", tunisianCity, typeof tunisianCity);
-      console.log("  isFamily:", isFamily, typeof isFamily);
-      console.log("  familyMembers:", familyMembers, typeof familyMembers);
-      console.log("  occupation:", occupation, typeof occupation);
-      console.log("  settlingYear:", settlingYear, typeof settlingYear);
+        const familyMembersJSON = JSON.stringify(familyMembers || []);
 
+        const result = await pool.query( // Use pool.query
+            `INSERT INTO members (name, email, location, age, sex, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            RETURNING id`, // Use RETURNING id for PostgreSQL
+            [name, email, location, age, sex, workStatus, tunisianCity, isFamily ? 1 : 0, familyMembersJSON, occupation, settlingYear]
+        );
+        // Access the new ID from result.rows[0].id
+        res.status(201).json({ message: 'Member added successfully', id: String(result.rows[0].id) });
 
-      if (!name || !email || !location || !age || !sex || !workStatus || !tunisianCity || !settlingYear) {
-          console.log("Missing required fields. Returning 400.");
-          return res.status(400).json({ message: 'Missing required fields' });
-      }
-
-      // Ensure familyMembers is ALWAYS a valid JSON string, even if empty
-      let familyMembersJSON;
-      try {
-          familyMembersJSON = JSON.stringify(familyMembers || []);
-          console.log("familyMembersJSON:", familyMembersJSON, typeof familyMembersJSON); // Log the JSON string
-      } catch (error) {
-          console.error("Error stringifying familyMembers:", error);
-          return res.status(500).json({ message: 'Error processing family data' });
-      }
-
-
-      const result = await db.execute({
-          sql: `INSERT INTO members (name, email, location, age, sex, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          args: [name, email, location, age, sex, workStatus, tunisianCity, isFamily ? 1 : 0, familyMembersJSON, occupation, settlingYear],
-      });
-
-      console.log("Database insert result:", result); // Log the result
-
-      res.status(201).json({ message: 'Member added successfully', id: String(result.lastInsertRowid) });
-
-  } catch (error) {
-      console.error('Error adding member:', error); // Log any errors
-      console.log('Error stack trace:', error.stack); // Add stack trace
-      res.status(500).json({ message: 'Error adding member' });
-  }
+    } catch (error) {
+        console.error('Error adding member:', error);
+        res.status(500).json({ message: 'Error adding member' });
+    }
 });
-
-
-// // Login endpoint
-// app.post('/api/login', async (req, res) => {
-//   const { username, password } = req.body;
-//   console.log('Received login request:', req.body); // Log request body
-
-//   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-//     console.log('Login successful'); // Log success
-//     res.status(200).json({ message: 'Login successful', success: true });
-//   } else {
-//     console.log('Login failed'); // Log failure
-//     res.status(401).json({ message: 'Invalid credentials', success: false }); // 401 Unauthorized
-//   }
-// });
-
-// // Login endpoint
-// app.post('/api/login', async (req, res) => {
-//   const { username, password } = req.body;
-//   console.log('Received login request:', req.body);
-
-//   // Use environment variables for admin credentials
-//   if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-//     console.log('Login successful');
-//     res.status(200).json({ message: 'Login successful', success: true });
-//   } else {
-//     console.log('Login failed');
-//     res.status(401).json({ message: 'Invalid credentials', success: false });
-//   }
-// });
 
 // Login endpoint
 app.post('/api/login', async (req, res) => {
@@ -131,28 +85,22 @@ app.post('/api/login', async (req, res) => {
 
   try {
     // 1. Fetch the user from the database based on the username
-    const { rows } = await db.execute({
-      sql: 'SELECT * FROM users WHERE username = ?',
-      args: [username],
-    });
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]); // Use pool.query
 
-    if (rows.length === 0) {
-      // User not found
+    if (result.rows.length === 0) {
       console.log('Login failed: User not found');
       return res.status(401).json({ message: 'Invalid credentials', success: false });
     }
 
-    const user = rows[0];
+    const user = result.rows[0];
 
     // 2. Compare the provided password with the *hashed* password from the database
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (passwordMatch) {
-      // 3. Login successful!
       console.log('Login successful');
       res.status(200).json({ message: 'Login successful', success: true });
     } else {
-      // 4. Passwords don't match
       console.log('Login failed: Incorrect password');
       res.status(401).json({ message: 'Invalid credentials', success: false });
     }
@@ -164,74 +112,73 @@ app.post('/api/login', async (req, res) => {
 
 // Get all events
 app.get('/api/events', async (req, res) => {
-  try {
-    const { rows } = await db.execute('SELECT * FROM events');
-    // Convert start and end to ISO strings for JSON serialization
-    const events = rows.map(row => ({
-        ...row,
-        start: new Date(row.start).toISOString(),
-        end: new Date(row.end).toISOString(),
-    }));
-    res.json(events);
-  } catch (error) {
-    console.error('Error fetching events:', error);
-    res.status(500).json({ message: 'Error fetching events' });
-  }
+    try {
+        const { rows } = await pool.query('SELECT * FROM events'); // Use pool.query
+        const events = rows.map(row => ({
+            ...row,
+            start: new Date(row.start).toISOString(), // Keep as ISO string for frontend
+            end: new Date(row.end).toISOString(),     // Keep as ISO string for frontend
+        }));
+        res.json(events);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).json({ message: 'Error fetching events' });
+      }
 });
 
 // Add a new event
-app.post('/api/events', async (req, res) => {
-  try {
+app.post('/api/events', async (req, res) => { /* ... existing add event route, updated for pool.query ... */
+    try {
         console.log("Received event request", req.body);
         const { title, start, end, location, description } = req.body;
 
-    if (!title || !start || !end || !location) {
-      return res.status(400).json({ message: 'Missing required fields' });
+        if (!title || !start || !end || !location) {
+          return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        const startTimestamp = new Date(start).getTime();
+        const endTimestamp = new Date(end).getTime();
+
+        const result = await pool.query( // Use pool.query
+        'INSERT INTO events (title, start, end, location, description) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+        [title, startTimestamp, endTimestamp, location, description]
+        );
+
+        res.status(201).json({ message: 'Event added successfully', id: String(result.rows[0].id) }); // Access id from result.rows[0]
+    } catch (error) {
+        console.error('Error adding event:', error);
+        res.status(500).json({ message: 'Error adding event' });
     }
-
-    const startTimestamp = new Date(start).getTime();
-    const endTimestamp = new Date(end).getTime();
-
-    const result = await db.execute({
-      sql: 'INSERT INTO events (title, start, end, location, description) VALUES (?, ?, ?, ?, ?)',
-      args: [title, startTimestamp, endTimestamp, location, description],
-    });
-
-    res.status(201).json({ message: 'Event added successfully', id: String(result.lastInsertRowid) });
-  } catch (error) {
-    console.error('Error adding event:', error);
-    res.status(500).json({ message: 'Error adding event' });
-  }
 });
 
 //Delete an event
-app.delete('/api/events/:id', async (req, res) => {
-  try {
-    const eventId = req.params.id;
-    console.log('Received delete request for event ID:', eventId);
+app.delete('/api/events/:id', async (req, res) => { /* ... existing delete event route, updated for pool.query ... */
+    try {
+        const eventId = req.params.id;
+        console.log('Received delete request for event ID:', eventId);
 
-    // Check if the event exists (optional, but good practice)
-    const { rows } = await db.execute({
-      sql: 'SELECT * FROM events WHERE id = ?',
-      args: [eventId],
-    });
-    console.log('Event found (rows):', rows);
+        // Check if the event exists (optional, but good practice)
+        const { rows } = await pool.query({ // Use pool.query
+          sql: 'SELECT * FROM events WHERE id = $1',
+          args: [eventId],
+        });
+        console.log('Event found (rows):', rows);
 
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
+        if (rows.length === 0) {
+          return res.status(404).json({ message: 'Event not found' });
+        }
 
-    // Delete the event
-    await db.execute({
-      sql: 'DELETE FROM events WHERE id = ?',
-      args: [eventId],
-    });
+        // Delete the event
+        await pool.query({ // Use pool.query
+          sql: 'DELETE FROM events WHERE id = $1',
+          args: [eventId],
+        });
 
-    res.status(200).json({ message: 'Event deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting event:', error);
-    res.status(500).json({ message: 'Error deleting event' });
-  }
+        res.status(200).json({ message: 'Event deleted successfully' });
+      } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).json({ message: 'Error deleting event' });
+      }
 });
 
 // --- Database Initialization ---
@@ -239,111 +186,72 @@ async function initializeApp() {
     console.log('initializeApp started');
 
     try {
-      // --- Helper function to check if a table exists ---
-      async function tableExists(tableName) {
-        console.log('Checking if table exists:', tableName);
-        try {
-          const { rows } = await db.execute(`SELECT name FROM sqlite_master WHERE type='table' AND name='${tableName}';`);
-          console.log('Table check result:', tableName, rows);
-          return rows.length > 0;
-        } catch (error) {
-          console.error(`Error checking if table ${tableName} exists:`, error);
-          return false; // Assume it doesn't exist on error
-        }
-      }
-
-      // --- Check and create the members table ---
-      console.log('Checking members table...');
-      if (!(await tableExists('members'))) {
-        console.log('Creating members table...');
-        await db.execute(`
-          CREATE TABLE members (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            location TEXT NOT NULL,
-            age INTEGER NOT NULL,
-            sex TEXT NOT NULL,
-            workStatus TEXT NOT NULL,
-            tunisianCity TEXT NOT NULL,
-            isFamily INTEGER NOT NULL,
-            familyMembers TEXT,
-            occupation TEXT,
-            settlingYear INTEGER NOT NULL
-          )
+        // Create the members table if it doesn't exist
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS members (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                location TEXT NOT NULL,
+                age INTEGER NOT NULL,
+                sex TEXT NOT NULL,
+                workStatus TEXT NOT NULL,
+                tunisianCity TEXT NOT NULL,
+                isFamily INTEGER NOT NULL,
+                familyMembers TEXT,
+                occupation TEXT,
+                settlingYear INTEGER NOT NULL
+            )
         `);
-        console.log('Members table created successfully');
-      } else {
-        console.log('Members table already exists');
-      }
+        console.log('Members table created or already exists');
 
-      // --- Check and create the events table ---
-      console.log('Checking events table...');
-      if (!(await tableExists('events'))) {
-        console.log('Creating events table...');
-        await db.execute(`
-          CREATE TABLE events (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            start INTEGER NOT NULL,
-            end INTEGER NOT NULL,
-            location TEXT,
-            description TEXT
-          )
+        // Create the events table if it doesn't exist
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS events (
+                id SERIAL PRIMARY KEY,
+                title TEXT NOT NULL,
+                start BIGINT NOT NULL,
+                end BIGINT NOT NULL,
+                location TEXT,
+                description TEXT
+            )
         `);
-        console.log('Events table created successfully');
-      } else {
-        console.log('Events table already exists');
-      }
+        console.log('Events table created or already exists');
 
-        // --- Check and create the users table ---
-      console.log('Checking users table...');
-      if (!(await tableExists('users'))) {
-        console.log('Creating users table...');
-        await db.execute(`
-          CREATE TABLE users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
-          )
+        // Create the users table if it doesn't exist
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                username TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL
+            )
         `);
-        console.log('Users table created successfully');
-      } else {
-        console.log('Users table already exists');
-      }
+        console.log('Users table created or already exists');
 
-      console.log('Starting server...');
-      app.listen(port, '0.0.0.0', () => { // Listen on 0.0.0.0
-        console.log(`Server listening on port ${port}`);
-      });
+          // --- TEMPORARY: Create an initial admin user (REMOVE THIS LATER) ---
+          try {
+            const existingAdmin = await pool.query("SELECT * FROM users WHERE username = $1", ['admin']);
+            if (existingAdmin.rows.length === 0) {
+              const hashedPassword = await bcrypt.hash('your_strong_password', 10); // Replace with a strong password
+              await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['admin', hashedPassword]);
+              console.log('Admin user created.');
+            } else {
+              console.log('Admin user already exists.');
+            }
+          } catch (adminError) {
+            console.error("Error creating admin user:", adminError);
+          }
+          // --- END TEMPORARY SECTION ---
 
-    //    // --- TEMPORARY: Create an initial admin user (REMOVE THIS LATER) ---
-    // try {
-    //   const existingAdmin = await db.execute("SELECT * FROM users WHERE username = 'admin'");
-    //   if (existingAdmin.rows.length === 0) {
-    //     const hashedPassword = await bcrypt.hash('password', 10); // Replace with a strong password, and use a good salt rounds value (10 is common)
-    //     await db.execute({
-    //       sql: 'INSERT INTO users (username, password) VALUES (?, ?)',
-    //       args: ['admin', hashedPassword],
-    //     });
-    //     console.log('Admin user created.');
-    //   } else {
-    //     console.log('Admin user already exists.');
-    //   }
-    // } catch (adminError) {
-    //   console.error("Error creating admin user:", adminError);
-    // }
-    // // --- END TEMPORARY SECTION ---
+        console.log('Starting server...');
+        app.listen(port, '0.0.0.0', () => {
+            console.log(`Server listening on port ${port}`);
+        });
 
     } catch (error) {
-        // General error handling, but specifically ignore SQLITE_OK *after* table creation
-        if (error.code !== 'SQLITE_OK') { // Only exit if it's a *real* error
-            console.error('Error initializing database:', error);
-            process.exit(1);
-        } else {
-            console.log("Ignoring SQLITE_OK during table creation.");
-        }
+        console.error('Error initializing database:', error);
+        process.exit(1);
     }
-  }
+}
 
 initializeApp();
