@@ -38,7 +38,7 @@ app.use(cors());
 // Get all members
 app.get('/api/members', async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM members');
+    const { rows } = await pool.query('SELECT * FROM members'); // Use pool.query
      // Convert familyMembers back to an object from JSON string
      const formattedRows = rows.map((row) => ({
         ...row,
@@ -63,7 +63,7 @@ app.post('/api/members', async (req, res) => {
 
         const familyMembersJSON = JSON.stringify(familyMembers || []);
 
-        const result = await pool.query(
+        const result = await pool.query( // Use pool.query
             `INSERT INTO members (name, email, location, age, sex, workStatus, tunisianCity, isFamily, familyMembers, occupation, settlingYear)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
             RETURNING id`, // Use RETURNING id for PostgreSQL
@@ -85,10 +85,9 @@ app.post('/api/login', async (req, res) => {
 
   try {
     // 1. Fetch the user from the database based on the username
-    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]); // Use pool.query
 
     if (result.rows.length === 0) {
-      // User not found
       console.log('Login failed: User not found');
       return res.status(401).json({ message: 'Invalid credentials', success: false });
     }
@@ -99,11 +98,9 @@ app.post('/api/login', async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (passwordMatch) {
-      // 3. Login successful!
       console.log('Login successful');
       res.status(200).json({ message: 'Login successful', success: true });
     } else {
-      // 4. Passwords don't match
       console.log('Login failed: Incorrect password');
       res.status(401).json({ message: 'Invalid credentials', success: false });
     }
@@ -116,7 +113,7 @@ app.post('/api/login', async (req, res) => {
 // Get all events
 app.get('/api/events', async (req, res) => {
     try {
-        const { rows } = await pool.query('SELECT * FROM events');
+        const { rows } = await pool.query('SELECT * FROM events'); // Use pool.query
         const events = rows.map(row => ({
             ...row,
             start: new Date(row.start).toISOString(), // Keep as ISO string for frontend
@@ -130,7 +127,7 @@ app.get('/api/events', async (req, res) => {
 });
 
 // Add a new event
-app.post('/api/events', async (req, res) => {
+app.post('/api/events', async (req, res) => { /* ... existing add event route, updated for pool.query ... */
     try {
         console.log("Received event request", req.body);
         const { title, start, end, location, description } = req.body;
@@ -142,12 +139,12 @@ app.post('/api/events', async (req, res) => {
         const startTimestamp = new Date(start).getTime();
         const endTimestamp = new Date(end).getTime();
 
-        const result = await pool.query(
+        const result = await pool.query( // Use pool.query
         'INSERT INTO events (title, start, end, location, description) VALUES ($1, $2, $3, $4, $5) RETURNING id',
         [title, startTimestamp, endTimestamp, location, description]
         );
 
-        res.status(201).json({ message: 'Event added successfully', id: String(result.rows[0].id) });
+        res.status(201).json({ message: 'Event added successfully', id: String(result.rows[0].id) }); // Access id from result.rows[0]
     } catch (error) {
         console.error('Error adding event:', error);
         res.status(500).json({ message: 'Error adding event' });
@@ -155,13 +152,13 @@ app.post('/api/events', async (req, res) => {
 });
 
 //Delete an event
-app.delete('/api/events/:id', async (req, res) => {
+app.delete('/api/events/:id', async (req, res) => { /* ... existing delete event route, updated for pool.query ... */
     try {
         const eventId = req.params.id;
         console.log('Received delete request for event ID:', eventId);
 
         // Check if the event exists (optional, but good practice)
-        const { rows } = await pool.query({
+        const { rows } = await pool.query({ // Use pool.query
           sql: 'SELECT * FROM events WHERE id = $1',
           args: [eventId],
         });
@@ -172,7 +169,7 @@ app.delete('/api/events/:id', async (req, res) => {
         }
 
         // Delete the event
-        await pool.query({
+        await pool.query({ // Use pool.query
           sql: 'DELETE FROM events WHERE id = $1',
           args: [eventId],
         });
