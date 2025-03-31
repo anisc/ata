@@ -273,7 +273,14 @@ async function initializeApp() {
         console.error("Error creating admin user:", adminError);
       }
       // --- END TEMPORARY SECTION ---
-
+// Inside initializeApp(), *after* creating the tables, *before* app.listen:
+try {
+  const testResult = await pool.query('SELECT 1'); // Simple test query
+  console.log('Database connection test successful:', testResult);
+} catch (testError) {
+  console.error('Database connection test failed:', testError);
+  process.exit(1); // Exit if cannot connect
+}
 console.log('Starting server...');
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server listening on port ${port}`);
