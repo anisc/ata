@@ -183,70 +183,101 @@ app.delete('/api/events/:id', async (req, res) => { /* ... existing delete event
 
 // --- Database Initialization ---
 async function initializeApp() {
-    console.log('initializeApp started');
+  console.log('initializeApp started');
 
-    try {
-        // Create the members table if it doesn't exist
+  try {
+      // --- Helper function to check if a table exists ---
+      async function tableExists(tableName) {
+        console.log('Checking if table exists:', tableName);
+        try {
+          const { rows } = await pool.query(`SELECT name FROM pg_tables WHERE schemaname = 'public' AND tablename = '${tableName}';`);
+          console.log('Table check result:', tableName, rows);
+          return rows.length > 0;
+        } catch (error) {
+          console.error(`Error checking if table ${tableName} exists:`, error);
+          return false; // Assume it doesn't exist on error
+        }
+      }
+
+      // --- Check and create the members table ---
+      console.log('Checking members table...');
+      if (!(await tableExists('members'))) {
+        console.log('Creating members table...');
         await pool.query(`
-            CREATE TABLE IF NOT EXISTS members (
-                id SERIAL PRIMARY KEY,
-                name TEXT NOT NULL,
-                email TEXT NOT NULL,
-                location TEXT NOT NULL,
-                age INTEGER NOT NULL,
-                sex TEXT NOT NULL,
-                workStatus TEXT NOT NULL,
-                tunisianCity TEXT NOT NULL,
-                isFamily INTEGER NOT NULL,
-                familyMembers TEXT,
-                occupation TEXT,
-                settlingYear INTEGER NOT NULL
-            )
+          CREATE TABLE members (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            location TEXT NOT NULL,
+            age INTEGER NOT NULL,
+            sex TEXT NOT NULL,
+            workStatus TEXT NOT NULL,
+            tunisianCity TEXT NOT NULL,
+            isFamily INTEGER NOT NULL,
+            familyMembers TEXT,
+            occupation TEXT,
+            settlingYear INTEGER NOT NULL
+          )
         `);
-        console.log('Members table created or already exists');
+        console.log('Members table created successfully');
+      } else {
+        console.log('Members table already exists');
+      }
 
-        // Create the events table if it doesn't exist
+      // --- Check and create the events table ---
+      console.log('Checking events table...');
+      if (!(await tableExists('events'))) {
+        console.log('Creating events table...');
         await pool.query(`
-            CREATE TABLE IF NOT EXISTS events (
-                id SERIAL PRIMARY KEY,
-                title TEXT NOT NULL,
-                start BIGINT NOT NULL,
-                end BIGINT NOT NULL,
-                location TEXT,
-                description TEXT
-            )
+          CREATE TABLE events (
+            id SERIAL PRIMARY KEY,
+            title TEXT NOT NULL,
+            start BIGINT NOT NULL,
+            end BIGINT NOT NULL,
+            location TEXT,
+            description TEXT
+          )
         `);
-        console.log('Events table created or already exists');
+        console.log('Events table created successfully');
+      } else {
+        console.log('Events table already exists');
+      }
 
-        // Create the users table if it doesn't exist
+      // --- Check and create the users table ---
+      console.log('Checking users table...');
+      if (!(await tableExists('users'))) {
+        console.log('Creating users table...');
         await pool.query(`
-            CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
-                username TEXT NOT NULL UNIQUE,
-                password TEXT NOT NULL
-            )
+          CREATE TABLE users (
+            id SERIAL PRIMARY KEY,
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL
+          )
         `);
-        console.log('Users table created or already exists');
+        console.log('Users table created successfully');
+      } else {
+        console.log('Users table already exists');
+      }
 
-          // --- TEMPORARY: Create an initial admin user (REMOVE THIS LATER) ---
-          try {
-            const existingAdmin = await pool.query("SELECT * FROM users WHERE username = $1", ['admin']);
-            if (existingAdmin.rows.length === 0) {
-              const hashedPassword = await bcrypt.hash('your_strong_password', 10); // Replace with a strong password
-              await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['admin', hashedPassword]);
-              console.log('Admin user created.');
-            } else {
-              console.log('Admin user already exists.');
-            }
-          } catch (adminError) {
-            console.error("Error creating admin user:", adminError);
-          }
-          // --- END TEMPORARY SECTION ---
+      // --- TEMPORARY: Create an initial admin user (REMOVE THIS LATER) ---
+      try {
+        const existingAdmin = await pool.query("SELECT * FROM users WHERE username = $1", ['admin']);
+        if (existingAdmin.rows.length === 0) {
+          const hashedPassword = await bcrypt.hash('password', 10); // Replace with a strong password
+          await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['$1', hashedPassword]);
+          console.log('Admin user created.');
+        } else {
+          console.log('Admin user already exists.');
+        }
+      } catch (adminError) {
+        console.error("Error creating admin user:", adminError);
+      }
+      // --- END TEMPORARY SECTION ---
 
-        console.log('Starting server...');
-        app.listen(port, '0.0.0.0', () => {
-            console.log(`Server listening on port ${port}`);
-        });
+console.log('Starting server...');
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server listening on port ${port}`);
+});
 
     } catch (error) {
         console.error('Error initializing database:', error);
