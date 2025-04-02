@@ -192,9 +192,15 @@ async function initializeApp() {
     async function tableExists(tableName) {
       console.log('Checking if table exists:', tableName);
       try {
-        const { rows } = await pool.query(`SELECT name FROM pg_tables WHERE schemaname = 'public' AND tablename = $1;`, [tableName]);
-        console.log('Table check result:', tableName, rows);
-        return rows.length > 0;
+        // Corrected query for PostgreSQL to check if a table exists
+    const result = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM pg_tables
+        WHERE schemaname = 'public' AND tablename  = $1
+      );
+    `, [tableName]);
+    console.log('Table check result:', tableName, result.rows); // Log the result.rows
+    return result.rows[0].exists;
       } catch (error) {
         console.error(`Error checking if table ${tableName} exists:`, error);
         return false; // Assume it doesn't exist on error
@@ -235,7 +241,7 @@ async function initializeApp() {
             id SERIAL PRIMARY KEY,
             title TEXT NOT NULL,
             start INTEGER NOT NULL,  -- Changed to INTEGER
-            end INTEGER NOT NULL,    -- Changed to INTEGER
+            endTime INTEGER NOT NULL,    -- Changed to INTEGER
             location TEXT,
             description TEXT
         )
