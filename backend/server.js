@@ -70,7 +70,7 @@ app.post('/api/members', async (req, res) => {
             [name, email, location, age, sex, workStatus, tunisianCity, isFamily ? 1 : 0, familyMembersJSON, occupation, settlingYear]
         );
         // Access the new ID from result.rows[0].id
-        res.status(201).json({ message: 'Member added successfully', id: String(result.rows[0].id) });
+        res.status(201).json({ message: 'Member added successfully', id: String(result.rows[0].id) }); // Access id from result.rows[0]
 
     } catch (error) {
         console.error('Error adding member:', error);
@@ -88,6 +88,7 @@ app.post('/api/login', async (req, res) => {
     const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]); // Use pool.query
 
     if (result.rows.length === 0) {
+      // User not found
       console.log('Login failed: User not found');
       return res.status(401).json({ message: 'Invalid credentials', success: false });
     }
@@ -98,9 +99,11 @@ app.post('/api/login', async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (passwordMatch) {
+      // 3. Login successful!
       console.log('Login successful');
       res.status(200).json({ message: 'Login successful', success: true });
     } else {
+      // 4. Passwords don't match
       console.log('Login failed: Incorrect password');
       res.status(401).json({ message: 'Invalid credentials', success: false });
     }
@@ -183,96 +186,65 @@ app.delete('/api/events/:id', async (req, res) => { /* ... existing delete event
 
 // --- Database Initialization ---
 async function initializeApp() {
-  console.log('initializeApp started');
+    console.log('initializeApp started');
 
-  try {
-      // --- Helper function to check if a table exists ---
-      async function tableExists(tableName) {
-        console.log('Checking if table exists:', tableName);
-        try {
-          const { rows } = await pool.query(`SELECT name FROM pg_tables WHERE schemaname = 'public' AND tablename = '${tableName}';`);
-          console.log('Table check result:', tableName, rows);
-          return rows.length > 0;
-        } catch (error) {
-          console.error(`Error checking if table ${tableName} exists:`, error);
-          return false; // Assume it doesn't exist on error
-        }
-      }
-
-      // --- Check and create the members table ---
-      console.log('Checking members table...');
-      if (!(await tableExists('members'))) {
-        console.log('Creating members table...');
+    try {
+        // Create the members table if it doesn't exist
         await pool.query(`
-          CREATE TABLE members (
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            location TEXT NOT NULL,
-            age INTEGER NOT NULL,
-            sex TEXT NOT NULL,
-            workStatus TEXT NOT NULL,
-            tunisianCity TEXT NOT NULL,
-            isFamily INTEGER NOT NULL,
-            familyMembers TEXT,
-            occupation TEXT,
-            settlingYear INTEGER NOT NULL
-          )
+            CREATE TABLE IF NOT EXISTS members (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                location TEXT NOT NULL,
+                age INTEGER NOT NULL,
+                sex TEXT NOT NULL,
+                workStatus TEXT NOT NULL,
+                tunisianCity TEXT NOT NULL,
+                isFamily INTEGER NOT NULL,
+                familyMembers TEXT,
+                occupation TEXT,
+                settlingYear INTEGER NOT NULL
+            )
         `);
-        console.log('Members table created successfully');
-      } else {
-        console.log('Members table already exists');
-      }
+        console.log('Members table created or already exists');
 
-      // --- Check and create the events table ---
-      console.log('Checking events table...');
-      if (!(await tableExists('events'))) {
-        console.log('Creating events table...');
+        // Create the events table if it doesn't exist
         await pool.query(`
-          CREATE TABLE events (
-            id SERIAL PRIMARY KEY,
-            title TEXT NOT NULL,
-            start BIGINT NOT NULL,
-            end BIGINT NOT NULL,
-            location TEXT,
-            description TEXT
-          )
+            CREATE TABLE IF NOT EXISTS events (
+                id SERIAL PRIMARY KEY,
+                title TEXT NOT NULL,
+                start BIGINT NOT NULL,
+                end BIGINT NOT NULL,
+                location TEXT,
+                description TEXT
+            )
         `);
-        console.log('Events table created successfully');
-      } else {
-        console.log('Events table already exists');
-      }
+        console.log('Events table created or already exists');
 
-      // --- Check and create the users table ---
-      console.log('Checking users table...');
-      if (!(await tableExists('users'))) {
-        console.log('Creating users table...');
+        // Create the users table if it doesn't exist
         await pool.query(`
-          CREATE TABLE users (
-            id SERIAL PRIMARY KEY,
-            username TEXT NOT NULL UNIQUE,
-            password TEXT NOT NULL
-          )
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                username TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL
+            )
         `);
-        console.log('Users table created successfully');
-      } else {
-        console.log('Users table already exists');
-      }
+        console.log('Users table created or already exists');
 
-      // --- TEMPORARY: Create an initial admin user (REMOVE THIS LATER) ---
-      try {
-        const existingAdmin = await pool.query("SELECT * FROM users WHERE username = $1", ['admin']);
-        if (existingAdmin.rows.length === 0) {
-          const hashedPassword = await bcrypt.hash('password', 10); // Replace with a strong password
-          await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['$1', hashedPassword]);
-          console.log('Admin user created.');
-        } else {
-          console.log('Admin user already exists.');
-        }
-      } catch (adminError) {
-        console.error("Error creating admin user:", adminError);
-      }
-      // --- END TEMPORARY SECTION ---
+          // --- TEMPORARY: Create an initial admin user (REMOVE THIS LATER) ---
+          try {
+            const existingAdmin = await pool.query("SELECT * FROM users WHERE username = $1", ['admin']);
+            if (existingAdmin.rows.length === 0) {
+              const hashedPassword = await bcrypt.hash('password', 10); // Replace with a strong password
+              await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['$1', hashedPassword]);
+              console.log('Admin user created.');
+            } else {
+              console.log('Admin user already exists.');
+            }
+          } catch (adminError) {
+            console.error("Error creating admin user:", adminError);
+          }
+          // --- END TEMPORARY SECTION ---
 // Inside initializeApp(), *after* creating the tables, *before* app.listen:
 try {
   const testResult = await pool.query('SELECT 1'); // Simple test query
