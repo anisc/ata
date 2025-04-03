@@ -268,18 +268,18 @@ async function initializeApp() {
     }
 
     // // --- TEMPORARY: Create an initial admin user (REMOVE THIS LATER) ---
-      try {
-        const existingAdmin = await pool.query("SELECT * FROM users WHERE username = $1", ['admin']);
-        if (existingAdmin.rows.length === 0) {
-          const hashedPassword = await bcrypt.hash('password', 10); // Replace with a strong password
-          await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['admin', hashedPassword]); // Corrected line
-          console.log('Admin user created.');
-        } else {
-          console.log('Admin user already exists.');
-        }
-      } catch (adminError) {
-        console.error("Error creating admin user:", adminError);
-      }
+      // try {
+      //   const existingAdmin = await pool.query("SELECT * FROM users WHERE username = $1", ['admin']);
+      //   if (existingAdmin.rows.length === 0) {
+      //     const hashedPassword = await bcrypt.hash('password', 10); // Replace with a strong password
+      //     await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', ['admin', hashedPassword]); // Corrected line
+      //     console.log('Admin user created.');
+      //   } else {
+      //     console.log('Admin user already exists.');
+      //   }
+      // } catch (adminError) {
+      //   console.error("Error creating admin user:", adminError);
+      // }
     // // --- END TEMPORARY SECTION ---
 
     console.log('Starting server...');
