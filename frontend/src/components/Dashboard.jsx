@@ -86,7 +86,7 @@ function Dashboard() {
         setIsSuccess(false);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/members`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
