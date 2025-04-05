@@ -11,7 +11,7 @@ function Dashboard() {
     const [newEvent, setNewEvent] = useState({
         title: '',
         start: '',
-        end: '',
+        endTime: '',
         location: '',
         description: '',
     });
@@ -63,7 +63,7 @@ function Dashboard() {
                 const formattedEvents = eventsData.map(event => ({
                     ...event,
                     start: new Date(event.start),
-                    endtime: new Date(event.endtime),
+                    endtime: new Date(event.endTime),
                 }));
                 setEvents(formattedEvents);
             } catch (error) {
@@ -99,7 +99,7 @@ function Dashboard() {
             if (response.ok) {
                 setMessage(data.message);
                 setIsSuccess(true);
-                setNewEvent({ title: '', start: '', end: '', location: '', description: '' });
+                setNewEvent({ title: '', start: '', endTime: '', location: '', description: '' });
 
                 // Refetch events
                 fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`)
@@ -108,7 +108,7 @@ function Dashboard() {
                         const formattedEvents = data.map(event => ({
                             ...event,
                             start: new Date(event.start),
-                            end: new Date(event.end),
+                            endTime: new Date(event.endTime),
                         }));
                         setEvents(formattedEvents);
                     })
@@ -143,7 +143,7 @@ function Dashboard() {
                         const formattedEvents = data.map(event => ({
                             ...event,
                             start: new Date(event.start),
-                            end: new Date(event.end),
+                            endTime: new Date(event.endTime),
                         }));
                         setEvents(formattedEvents);
                     })
@@ -439,7 +439,7 @@ function Dashboard() {
                                                     type="datetime-local"
                                                     id="event-end"
                                                     name="end"
-                                                    value={newEvent.end}
+                                                    value={newEvent.endTime}
                                                     onChange={handleInputChange}
                                                     required
                                                 />
@@ -481,7 +481,7 @@ function Dashboard() {
                                                     <li key={event.id} className="event-item">
                                                         <h3>{event.title}</h3>
                                                         <p><strong>Start:</strong> {event.start.toLocaleString()}</p>
-                                                        <p><strong>End:</strong> {event.end.toLocaleString()}</p>
+                                                        <p><strong>End:</strong> {event.endTime.toLocaleString()}</p>
                                                         <p><strong>Location:</strong> {event.location}</p>
                                                         <p><strong>Description:</strong> {event.description}</p>
                                                         <button onClick={() => handleDeleteEvent(event.id)} className="delete-button">Delete</button>
