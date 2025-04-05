@@ -11,7 +11,7 @@ function Dashboard() {
     const [newEvent, setNewEvent] = useState({
         title: '',
         start: '',
-        endTime: '',
+        endtime: '',
         location: '',
         description: '',
     });
@@ -63,7 +63,7 @@ function Dashboard() {
                 const formattedEvents = eventsData.map(event => ({
                     ...event,
                     start: new Date(event.start),
-                    endTime: new Date(event.end),
+                    endtime: new Date(event.end),
                 }));
                 setEvents(formattedEvents);
             } catch (error) {
@@ -99,7 +99,7 @@ function Dashboard() {
             if (response.ok) {
                 setMessage(data.message);
                 setIsSuccess(true);
-                setNewEvent({ title: '', start: '', endTime: '', location: '', description: '' });
+                setNewEvent({ title: '', start: '', endtime: '', location: '', description: '' });
 
                 // Refetch events
                 fetch(`${import.meta.env.VITE_API_BASE_URL}/api/events`)
@@ -108,7 +108,7 @@ function Dashboard() {
                         const formattedEvents = data.map(event => ({
                             ...event,
                             start: new Date(event.start),
-                            endTime: new Date(event.end),
+                            endtime: new Date(event.end),
                         }));
                         setEvents(formattedEvents);
                     })
@@ -143,7 +143,7 @@ function Dashboard() {
                         const formattedEvents = data.map(event => ({
                             ...event,
                             start: new Date(event.start),
-                            endTime: new Date(event.end),
+                            endtime: new Date(event.end),
                         }));
                         setEvents(formattedEvents);
                     })
@@ -438,7 +438,7 @@ function Dashboard() {
                                                 <input
                                                     type="datetime-local"
                                                     id="event-end"
-                                                    name="endTime"
+                                                    name="endtime"
                                                     value={newEvent.end}
                                                     onChange={handleInputChange}
                                                     required
