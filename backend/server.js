@@ -119,7 +119,7 @@ app.get('/api/events', async (req, res) => {
     const events = rows.map(row => ({
       ...row,
       start: new Date(row.start).toISOString(), // Keep as ISO string for frontend
-      endtime: new Date(row.endtime).toISOString(), // Keep as ISO string for frontend
+      endTime: new Date(row.endTime).toISOString(), // Keep as ISO string for frontend
     }));
     res.json(events);
   } catch (error) {
@@ -132,14 +132,14 @@ app.get('/api/events', async (req, res) => {
 app.post('/api/events', async (req, res) => { /* ... existing add event route, updated for pool.query ... */
   try {
     console.log("Received event request", req.body);
-    const { title, start, end, location, description } = req.body;
+    const { title, start, endTime, location, description } = req.body;
 
-    if (!title || !start || !end || !location) {
+    if (!title || !start || !endTime || !location) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
     const startTimestamp = new Date(start).getTime();
-    const endTimestamp = new Date(end).getTime();
+    const endTimestamp = new Date(endTime).getTime();
 
     const result = await pool.query( // Use pool.query
       'INSERT INTO events (title, start, endTime, location, description) VALUES ($1, $2, $3, $4, $5) RETURNING id',
