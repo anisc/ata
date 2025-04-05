@@ -240,8 +240,8 @@ async function initializeApp() {
         CREATE TABLE IF NOT EXISTS events (
             id SERIAL PRIMARY KEY,
             title TEXT NOT NULL,
-            start INTEGER NOT NULL,  -- Changed to INTEGER
-            endTime INTEGER NOT NULL,    -- Changed to INTEGER
+            start BIGINT NOT NULL,  -- Changed to INTEGER
+            endTime BIGINT NOT NULL,    -- Changed to INTEGER
             location TEXT,
             description TEXT
         )
