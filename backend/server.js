@@ -119,7 +119,7 @@ app.get('/api/events', async (req, res) => {
     const events = rows.map(row => ({
       ...row,
       start: new Date(row.start).toISOString(), // Keep as ISO string for frontend
-      endtime: new Date(row.endTime).toISOString(), // Keep as ISO string for frontend
+      endtime: new Date(row.endtime).toISOString(), // Keep as ISO string for frontend
     }));
     res.json(events);
   } catch (error) {
@@ -240,8 +240,8 @@ async function initializeApp() {
         CREATE TABLE IF NOT EXISTS events (
             id SERIAL PRIMARY KEY,
             title TEXT NOT NULL,
-            start BIGINT NOT NULL,  -- Changed to INTEGER
-            endtime BIGINT NOT NULL,    -- Changed to INTEGER
+            start INTEGER NOT NULL,  -- Changed to INTEGER
+            endtime INTEGER NOT NULL,    -- Changed to INTEGER
             location TEXT,
             description TEXT
         )
