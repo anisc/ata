@@ -63,7 +63,7 @@ function Dashboard() {
                 const formattedEvents = eventsData.map(event => ({
                     ...event,
                     start: new Date(event.start),
-                    endTime: new Date(event.endTime),
+                    end: new Date(event.end),
                 }));
                 setEvents(formattedEvents);
             } catch (error) {
@@ -108,7 +108,7 @@ function Dashboard() {
                         const formattedEvents = data.map(event => ({
                             ...event,
                             start: new Date(event.start),
-                            endTime: new Date(event.endTime),
+                            end: new Date(event.end),
                         }));
                         setEvents(formattedEvents);
                     })
@@ -143,7 +143,7 @@ function Dashboard() {
                         const formattedEvents = data.map(event => ({
                             ...event,
                             start: new Date(event.start),
-                            endTime: new Date(event.endTime),
+                            end: new Date(event.end),
                         }));
                         setEvents(formattedEvents);
                     })
@@ -439,7 +439,7 @@ function Dashboard() {
                                                     type="datetime-local"
                                                     id="event-end"
                                                     name="end"
-                                                    value={newEvent.endTime}
+                                                    value={newEvent.end}
                                                     onChange={handleInputChange}
                                                     required
                                                 />
@@ -481,7 +481,7 @@ function Dashboard() {
                                                     <li key={event.id} className="event-item">
                                                         <h3>{event.title}</h3>
                                                         <p><strong>Start:</strong> {event.start.toLocaleString()}</p>
-                                                        <p><strong>End:</strong> {event.endTime.toLocaleString()}</p>
+                                                        <p><strong>End:</strong> {event.end.toLocaleString()}</p>
                                                         <p><strong>Location:</strong> {event.location}</p>
                                                         <p><strong>Description:</strong> {event.description}</p>
                                                         <button onClick={() => handleDeleteEvent(event.id)} className="delete-button">Delete</button>
