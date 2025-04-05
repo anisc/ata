@@ -116,11 +116,16 @@ app.post('/api/login', async (req, res) => {
 app.get('/api/events', async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT * FROM events'); // Use pool.query
-    const events = rows.map(row => ({
-      ...row,
-      start: new Date(row.start).toISOString(), // Keep as ISO string for frontend
-      endtime: new Date(row.endtime).toISOString(), // Keep as ISO string for frontend
-    }));
+    const events = rows.map(row => {
+      const startTime = Number(row.start); // Explicitly convert to Number
+      const endTime = Number(row.endtime); // Explicitly convert to Number
+
+      return {
+        ...row,
+        start: new Date(startTime).toISOString(), // Use converted Number
+        end: new Date(endTime).toISOString(),   // Use converted Number
+      };
+    });
     res.json(events);
   } catch (error) {
     console.error('Error fetching events:', error);
