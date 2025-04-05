@@ -439,7 +439,7 @@ function Dashboard() {
                                                     type="datetime-local"
                                                     id="event-end"
                                                     name="end"
-                                                    value={newEvent.end}
+                                                    value={newEvent.endTime}
                                                     onChange={handleInputChange}
                                                     required
                                                 />

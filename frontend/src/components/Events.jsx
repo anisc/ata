@@ -35,7 +35,7 @@ function Events() {
         const formattedEvents = data.map(event => ({
           ...event,
           start: new Date(event.start),
-          end: new Date(event.end),
+          endTime: new Date(event.end),
         }));
         setEvents(formattedEvents);
       })
