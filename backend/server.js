@@ -119,7 +119,7 @@ app.get('/api/events', async (req, res) => {
     const events = rows.map(row => ({
       ...row,
       start: new Date(row.start).toISOString(), // Keep as ISO string for frontend
-      endTime: new Date(row.endTime).toISOString(), // Keep as ISO string for frontend
+      endtime: new Date(row.endtime).toISOString(), // Keep as ISO string for frontend
     }));
     res.json(events);
   } catch (error) {

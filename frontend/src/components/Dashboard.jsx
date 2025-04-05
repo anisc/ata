@@ -63,7 +63,7 @@ function Dashboard() {
                 const formattedEvents = eventsData.map(event => ({
                     ...event,
                     start: new Date(event.start),
-                    endTime: new Date(event.endTime),
+                    endtime: new Date(event.endtime),
                 }));
                 setEvents(formattedEvents);
             } catch (error) {
