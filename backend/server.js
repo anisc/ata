@@ -142,7 +142,7 @@ app.post('/api/events', async (req, res) => { /* ... existing add event route, u
     const endTimestamp = new Date(end).getTime();
 
     const result = await pool.query( // Use pool.query
-      'INSERT INTO events (title, start, end, location, description) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+      'INSERT INTO events (title, start, endTime, location, description) VALUES ($1, $2, $3, $4, $5) RETURNING id',
       [title, startTimestamp, endTimestamp, location, description]
     );
 
