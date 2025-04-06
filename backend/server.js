@@ -166,8 +166,8 @@ app.delete('/api/events/:id', async (req, res) => { /* ... your DELETE route ...
 
     // Check if the event exists (optional, but good practice)
     const { rows } = await pool.query({ // Corrected: use 'text' instead of 'sql'
-      text: 'SELECT * FROM events WHERE id = %s', // Changed 'sql' to 'text'
-      args: [eventId],
+      text: 'SELECT * FROM events WHERE id = $1', // Changed 'sql' to 'text'
+      values: [eventId],
     });
     console.log('Event found (rows):', rows);
 
@@ -177,8 +177,8 @@ app.delete('/api/events/:id', async (req, res) => { /* ... your DELETE route ...
 
     // Delete the event
     await pool.query({ // Corrected: use 'text' instead of 'sql'
-      text: 'DELETE FROM events WHERE id = %s', // Changed 'sql' to 'text'
-      args: [eventId],
+      text: 'DELETE FROM events WHERE id = $1', // Changed 'sql' to 'text'
+      values: [eventId],
     });
 
     res.status(200).json({ message: 'Event deleted successfully' });
