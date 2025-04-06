@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "date-fns": "^4.1.0",
+    "date-fns": "0.40.0",
     "react": "^18.2.0",
-    "react-big-calendar": "^1.17.1",
+    "react-big-calendar": "2.8.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
     "react-slick": "^0.30.3",
