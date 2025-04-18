@@ -1,4 +1,3 @@
-// frontend/src/components/Header.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Header.css';
@@ -9,18 +8,29 @@ function Header() {
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsSticky(window.scrollY > 50);
     };
 
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (!isMobile) {
+        setMenuOpen(false); // Close menu when resizing to desktop
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isMobile]);
 
   const handleLogout = () => {
     logout();
@@ -28,6 +38,10 @@ function Header() {
   };
 
   const isDashboard = location.pathname === '/dashboard';
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   return (
     <header className={`header ${isSticky ? 'sticky' : ''}`}>
@@ -37,7 +51,10 @@ function Header() {
             <img src="/logo.png" alt="Tunisian Circle Logo" className="logo-image" />
           </Link>
         </div>
-        <nav className="nav">
+        <button className="nav-toggle" onClick={toggleMenu} aria-label="Toggle navigation">
+          <span className="hamburger"></span>
+        </button>
+        <nav className={`nav ${menuOpen || !isMobile ? 'active' : ''}`}>
           <ul>
             {!isDashboard && (
               <li><Link to="/">Home</Link></li>

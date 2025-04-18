@@ -1,6 +1,7 @@
 // frontend/src/components/Membership.jsx
 import React from 'react';
 import './Membership.css';
+import PayPalButtonComponent from './PayPalButton'; // Import PayPal Button
 
 function Membership() {
   return (
@@ -24,9 +25,9 @@ function Membership() {
         </div>
 
         <div className="membership-info text-center">
-          {/* Placeholder for membership purchase information */}
-          <p>Membership purchase details will go here.</p>
-          <button>Purchase Membership</button> {/* Placeholder button */}
+          {/* PayPal Button Integration */}
+          <p>Membership Fee: $20.00 CAD</p>
+          <PayPalButtonComponent /> {/* PayPal Button Component */}
         </div>
       </section>
     </div>
